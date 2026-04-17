@@ -1,0 +1,6 @@
+{
+  "name": "Habit Loop",
+  "description": "A Material 3 inspired habit tracker featuring a unique 'Snake Track' visualization and persistent local storage.",
+  "requestFramePermissions": [],
+  "majorCapabilities": []
+}
