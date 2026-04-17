@@ -3,6 +3,16 @@ export interface Habit {
   name: string;
   createdAt: number;
   completedDays: string[]; // Array of strings like "YYYY-MM-DD"
+  category: string;
+  color: string;
+  streak: number;
+  longestStreak: number;
+}
+
+export interface Category {
+  id: string;
+  name: string;
+  color: string;
 }
 
 export type ViewType = 'Today' | 'Week' | 'Month';
