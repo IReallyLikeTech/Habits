@@ -30,7 +30,8 @@ export default function App() {
           category: h.category || 'Personal',
           color: h.color || '#6750A4',
           streak: h.streak || 0,
-          longestStreak: h.longestStreak || 0
+          longestStreak: h.longestStreak || 0,
+          duration: h.duration || 0
         }));
         setHabits(sanitized);
       } catch (e) {
@@ -75,7 +76,7 @@ export default function App() {
     }
   };
 
-  const addHabit = (name: string, category: string, color: string) => {
+  const addHabit = (name: string, category: string, color: string, duration: number) => {
     const newHabit: Habit = {
       id: typeof crypto !== 'undefined' ? crypto.randomUUID() : Math.random().toString(36).substring(7),
       name,
@@ -84,7 +85,8 @@ export default function App() {
       category,
       color,
       streak: 0,
-      longestStreak: 0
+      longestStreak: 0,
+      duration
     };
     setHabits(prev => [newHabit, ...prev]);
   };
@@ -98,6 +100,18 @@ export default function App() {
     if (!selectedCategory) return habits;
     return habits.filter(h => h.category === selectedCategory);
   }, [habits, selectedCategory]);
+
+  const totalDailyMinutes = useMemo(() => {
+    return habits.reduce((acc, h) => acc + (h.duration || 0), 0);
+  }, [habits]);
+
+  const formatHours = (mins: number) => {
+    const h = Math.floor(mins / 60);
+    const m = mins % 60;
+    if (h === 0) return `${m}m`;
+    if (m === 0) return `${h}h`;
+    return `${h}h ${m}m`;
+  };
 
   // Trends Data
   const trendsData = useMemo(() => {
@@ -192,6 +206,63 @@ export default function App() {
                   />
                 ))
               )}
+            </motion.div>
+          )}
+
+          {activeTab === 'Planner' && (
+            <motion.div
+              key="planner-view"
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.95 }}
+              className="px-6 py-6 flex flex-col gap-6"
+            >
+              <div className="bg-surface-container-high rounded-[28px] p-8 flex flex-col gap-4 border border-outline-variant/10 shadow-inner overflow-hidden relative">
+                <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-full blur-3xl -mr-16 -mt-16" />
+                <div className="flex flex-col gap-1 relative">
+                  <span className="text-[10px] uppercase font-black tracking-widest text-primary/60">Daily Commitment</span>
+                  <div className="flex items-baseline gap-2">
+                    <span className="text-4xl font-black text-on-surface">{formatHours(totalDailyMinutes)}</span>
+                    <span className="text-sm font-bold text-on-surface/30">Total</span>
+                  </div>
+                </div>
+                
+                <div className="mt-4 flex flex-col gap-3 relative">
+                  {habits.length === 0 ? (
+                    <p className="text-sm text-on-surface/40 italic">Nothing planned yet. Define your habits to see your daily stack.</p>
+                  ) : (
+                    habits.map(h => (
+                      <div key={h.id} className="flex items-center gap-3 bg-surface/40 p-3 rounded-2xl border border-outline-variant/20 hover:border-primary/20 transition-all group">
+                        <div 
+                          className="w-1.5 h-8 rounded-full shadow-sm"
+                          style={{ backgroundColor: h.color }}
+                        />
+                        <div className="flex-1 flex flex-col">
+                          <span className="text-sm font-bold text-on-surface group-hover:text-primary transition-colors">{h.name}</span>
+                          <span className="text-[10px] text-on-surface/40 uppercase font-black tracking-widest">{h.category}</span>
+                        </div>
+                        <span className="text-xs font-black text-on-surface/60 font-mono tracking-tighter">
+                          {h.duration || 0}m
+                        </span>
+                      </div>
+                    ))
+                  )}
+                </div>
+              </div>
+
+              <div className="p-4 bg-primary/5 rounded-[24px] border border-primary/10 flex flex-col gap-4">
+                <div className="flex items-center gap-3">
+                  <div className="w-8 h-8 rounded-full bg-primary flex items-center justify-center text-white font-black text-xs">!</div>
+                  <h4 className="text-xs font-black uppercase tracking-widest text-primary/80 leading-snug">
+                    Time Management Insight
+                  </h4>
+                </div>
+                <p className="text-[11px] font-medium leading-relaxed text-on-surface/60">
+                  {totalDailyMinutes > 180 
+                    ? "Warning: Your daily commitment is quite high. Ensure you've buffered for unexpected interruptions."
+                    : "Your daily stack looks manageable. Consistency is easier with a clear time budget!"}
+                </p>
+              </div>
             </motion.div>
           )}
 

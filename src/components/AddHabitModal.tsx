@@ -5,22 +5,27 @@ import { cn } from '../lib/utils';
 interface AddHabitModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onAdd: (name: string, category: string, color: string) => void;
+  onAdd: (name: string, category: string, color: string, duration: number) => void;
 }
 
 const DEFAULT_CATEGORIES = ['Health', 'Work', 'Mindfulness', 'Social', 'Personal'];
 const DEFAULT_COLORS = ['#6750A4', '#D23F57', '#006B5B', '#8C4E03', '#445E91'];
+const DURATION_PRESETS = [15, 30, 45, 60];
 
 export default function AddHabitModal({ isOpen, onClose, onAdd }: AddHabitModalProps) {
   const [name, setName] = useState('');
   const [category, setCategory] = useState(DEFAULT_CATEGORIES[0]);
   const [color, setColor] = useState(DEFAULT_COLORS[0]);
+  const [duration, setDuration] = useState(30);
+  const [isCustomDuration, setIsCustomDuration] = useState(false);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (name.trim()) {
-      onAdd(name.trim(), category, color);
+      onAdd(name.trim(), category, color, duration);
       setName('');
+      setDuration(30);
+      setIsCustomDuration(false);
       onClose();
     }
   };
@@ -55,9 +60,58 @@ export default function AddHabitModal({ isOpen, onClose, onAdd }: AddHabitModalP
                     type="text"
                     value={name}
                     onChange={(e) => setName(e.target.value)}
-                    placeholder="e.g. Read for 30 mins"
+                    placeholder="e.g. Read"
                     className="bg-surface border-2 border-outline-variant rounded-2xl px-4 py-3 text-on-surface focus:outline-none focus:border-primary transition-colors"
                   />
+                </div>
+
+                <div className="flex flex-col gap-3">
+                  <label className="text-sm font-bold text-on-surface/50 uppercase tracking-widest px-1">
+                    Duration (minutes)
+                  </label>
+                  <div className="flex flex-wrap gap-2">
+                    {DURATION_PRESETS.map(p => (
+                      <button
+                        key={p}
+                        type="button"
+                        onClick={() => {
+                          setDuration(p);
+                          setIsCustomDuration(false);
+                        }}
+                        className={cn(
+                          "px-4 py-1.5 rounded-full text-xs font-bold transition-all border-2",
+                          !isCustomDuration && duration === p 
+                            ? "bg-primary-container border-primary text-on-primary-container" 
+                            : "bg-surface border-outline-variant text-on-surface/60 hover:border-primary/30"
+                        )}
+                      >
+                        {p}m
+                      </button>
+                    ))}
+                    <button
+                      type="button"
+                      onClick={() => setIsCustomDuration(true)}
+                      className={cn(
+                        "px-4 py-1.5 rounded-full text-xs font-bold transition-all border-2",
+                        isCustomDuration 
+                          ? "bg-primary-container border-primary text-on-primary-container" 
+                          : "bg-surface border-outline-variant text-on-surface/60 hover:border-primary/30"
+                      )}
+                    >
+                      Custom
+                    </button>
+                  </div>
+                  {isCustomDuration && (
+                    <motion.input
+                      initial={{ opacity: 0, height: 0 }}
+                      animate={{ opacity: 1, height: 'auto' }}
+                      type="number"
+                      value={duration}
+                      onChange={(e) => setDuration(parseInt(e.target.value) || 0)}
+                      min="1"
+                      className="bg-surface border-2 border-outline-variant rounded-xl px-4 py-2 mt-1 text-on-surface focus:outline-none focus:border-primary transition-colors"
+                    />
+                  )}
                 </div>
 
                 <div className="flex flex-col gap-3">

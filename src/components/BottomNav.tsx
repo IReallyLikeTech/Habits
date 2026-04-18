@@ -1,4 +1,4 @@
-import { LayoutList, TrendingUp, Settings } from 'lucide-react';
+import { LayoutList, Calendar, TrendingUp, Settings } from 'lucide-react';
 import { NavTab } from '../types';
 import { cn } from '../lib/utils';
 import { motion } from 'motion/react';
@@ -10,6 +10,7 @@ interface BottomNavProps {
 
 const tabs: { id: NavTab; label: string; icon: any }[] = [
   { id: 'Habits', label: 'Habits', icon: LayoutList },
+  { id: 'Planner', label: 'Planner', icon: Calendar },
   { id: 'Trends', label: 'Trends', icon: TrendingUp },
   { id: 'Settings', label: 'Settings', icon: Settings },
 ];

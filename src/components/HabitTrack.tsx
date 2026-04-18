@@ -19,6 +19,11 @@ const HabitTrack: React.FC<HabitTrackProps> = ({ habit, dates, onToggle, onDelet
         <div className="flex flex-col gap-0.5">
           <div className="flex items-center gap-2">
             <h3 className="text-label-large text-on-surface font-bold">{habit.name}</h3>
+            {habit.duration && (
+              <span className="text-[10px] font-bold bg-surface-container px-1.5 py-0.5 rounded-md text-on-surface/40">
+                {habit.duration}m
+              </span>
+            )}
             <button 
               onClick={() => onDelete(habit.id)}
               className="p-1 hover:bg-red-50 text-on-surface/20 hover:text-red-500 rounded-full transition-colors"

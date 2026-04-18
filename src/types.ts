@@ -7,6 +7,7 @@ export interface Habit {
   color: string;
   streak: number;
   longestStreak: number;
+  duration?: number; // Duration in minutes
 }
 
 export interface Category {
@@ -16,4 +17,4 @@ export interface Category {
 }
 
 export type ViewType = 'Today' | 'Week' | 'Month';
-export type NavTab = 'Habits' | 'Trends' | 'Settings';
+export type NavTab = 'Habits' | 'Planner' | 'Trends' | 'Settings';
