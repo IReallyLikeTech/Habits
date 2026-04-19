@@ -1,6 +1,6 @@
 {
   "name": "Habit Loop",
-  "description": "A Material 3 inspired habit tracker featuring a unique 'Snake Track' visualization and persistent local storage.",
+  "description": "A Material 3 inspired habit tracker with Android mobile support, featuring a unique 'Snake Track' visualization and Capacitor integration.",
   "requestFramePermissions": [],
   "majorCapabilities": []
 }
